@@ -64,7 +64,7 @@ public class Log {
     }
 
     public void i(Object object, String msg) {
-        log(object, android.util.Log.DEBUG, msg);
+        log(object, android.util.Log.INFO, msg);
     }
 
     public void e(Object object, String msg) {

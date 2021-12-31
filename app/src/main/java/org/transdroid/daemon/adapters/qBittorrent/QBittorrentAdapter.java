@@ -86,7 +86,7 @@ public class QBittorrentAdapter implements IDaemonAdapter {
 
     private static final String LOG_NAME = "qBittorrent daemon";
 
-    private DaemonSettings settings;
+    private final DaemonSettings settings;
     private DefaultHttpClient httpclient;
     private int version = -1;
     private long lastAuthTime = -1;
@@ -169,18 +169,23 @@ public class QBittorrentAdapter implements IDaemonAdapter {
         final BasicNameValuePair usernameParam = new BasicNameValuePair("username", settings.getUsername());
         final BasicNameValuePair passwordParam = new BasicNameValuePair("password", settings.getPassword());
 
+        String response;
         // Try qBittorrent 4.1 API v2 first
         try {
-            makeRequest(log, "/api/v2/auth/login", usernameParam, passwordParam);
+            response = makeRequest(log, "/api/v2/auth/login", usernameParam, passwordParam);
             lastAuthTime = System.currentTimeMillis();
-        } catch (DaemonException ignored) {
+            log.d(LOG_NAME, "v2 Authentication Success: response: "  + response);
+        } catch (DaemonException e) {
+            log.e(LOG_NAME, "v2 Authentication Error: "  + e.toString());
         }
         // If still not authenticated, try the qBittorrent 3.2 API v1 endpoint
         if (!isAuthenticated()) {
             try {
-                makeRequest(log, "/login", usernameParam, passwordParam);
+                response = makeRequest(log, "/login", usernameParam, passwordParam);
                 lastAuthTime = System.currentTimeMillis();
-            } catch (DaemonException ignored) {
+                log.d(LOG_NAME, "v1 auth success: response: "  + response);
+            } catch (DaemonException e) {
+                log.e(LOG_NAME, "v1 Authentication Error: "  + e.toString());
             }
         }
 
@@ -529,7 +534,7 @@ public class QBittorrentAdapter implements IDaemonAdapter {
 
     }
 
-    private String makeUploadRequest(String path, String file, Log log) throws DaemonException {
+    private void makeUploadRequest(String path, String file, Log log) throws DaemonException {
 
         try {
 
@@ -538,7 +543,7 @@ public class QBittorrentAdapter implements IDaemonAdapter {
             File upload = new File(URI.create(file));
             Part[] parts = {new FilePart("torrentfile", upload)};
             httppost.setEntity(new MultipartEntity(parts, httppost.getParams()));
-            return makeWebRequest(httppost, log);
+            makeWebRequest(httppost, log);
 
         } catch (FileNotFoundException e) {
             throw new DaemonException(ExceptionType.FileAccessError, e.toString());
@@ -564,9 +569,6 @@ public class QBittorrentAdapter implements IDaemonAdapter {
                 java.io.InputStream instream = entity.getContent();
                 String result = HttpHelper.convertStreamToString(instream);
                 instream.close();
-
-                // TLog.d(LOG_NAME, "Success: " + (result.length() > 300? result.substring(0, 300) + "... (" +
-                // result.length() + " chars)": result));
 
                 // Return raw result
                 return result;
@@ -623,7 +625,7 @@ public class QBittorrentAdapter implements IDaemonAdapter {
                 JSONObject tor = messages.getJSONObject(i);
                 trackers.add(tor.getString("url"));
                 String msg = tor.getString("msg");
-                if (msg != null && !msg.equals(""))
+                if (!msg.equals(""))
                     errors.add(msg);
             }
         }
@@ -842,23 +844,18 @@ public class QBittorrentAdapter implements IDaemonAdapter {
                 return TorrentStatus.Error;
             case "downloading":
             case "metaDL":
-                return TorrentStatus.Downloading;
-            case "uploading":
-                return TorrentStatus.Seeding;
-            case "pausedDL":
-                return TorrentStatus.Paused;
-            case "pausedUP":
-                return TorrentStatus.Paused;
-            case "stalledUP":
-                return TorrentStatus.Seeding;
             case "stalledDL":
                 return TorrentStatus.Downloading;
+            case "uploading":
+            case "stalledUP":
+                return TorrentStatus.Seeding;
+            case "pausedDL":
+            case "pausedUP":
+                return TorrentStatus.Paused;
             case "checkingUP":
-                return TorrentStatus.Checking;
             case "checkingDL":
                 return TorrentStatus.Checking;
             case "queuedDL":
-                return TorrentStatus.Queued;
             case "queuedUP":
                 return TorrentStatus.Queued;
         }
