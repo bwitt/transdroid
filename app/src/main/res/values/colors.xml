@@ -36,4 +36,6 @@
     <color name="file_high">#1B5E20</color>                <!-- Dark green -->
     <color name="file_off">#757575</color>                <!-- Grey -->
 
+    <color name="ic_launcher_white_background">#FFFFFF</color>
+
 </resources>

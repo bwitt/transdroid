@@ -55,7 +55,7 @@
         android:allowBackup="true"
         android:banner="@drawable/banner"
         android:hardwareAccelerated="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat"
@@ -242,7 +242,7 @@
         <!-- Search -->
         <activity
             android:name="org.transdroid.core.gui.search.SearchActivity_"
-            android:icon="@drawable/ic_launcher"
+            android:icon="@mipmap/ic_launcher"
             android:label="@string/search_torrentsearch"
             android:launchMode="singleTask"
             android:theme="@style/TransdroidTheme"
