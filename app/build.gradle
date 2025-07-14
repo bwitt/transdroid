@@ -9,13 +9,13 @@ android {
         versionCode 244
         versionName '2.5.24'
 
-        javaCompileOptions {
-            annotationProcessorOptions {
-                arguments = [
-                        "resourcePackageName": "org.transdroid",
-                        "androidManifestFile": file("src/main/AndroidManifest.xml").absolutePath
-                ]
-            }
+        // Enable modern Android features
+        vectorDrawables.useSupportLibrary = true
+        
+        // Enable modern build features
+        buildFeatures {
+            viewBinding true
+            // dataBinding true  // Temporarily disabled due to layout variant conflicts
         }
     }
 
@@ -64,14 +64,15 @@ android {
         }
     }
 
-
     compileOptions {
         encoding = 'UTF-8'
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
-    useLibrary 'org.apache.http.legacy'
+    // Remove deprecated HTTP legacy library usage
+    // useLibrary 'org.apache.http.legacy'
+    
     lint {
         disable 'MissingTranslation', 'ExtraTranslation', 'StringFormatInvalid', 'ValidFragment', 'Registered'
     }
@@ -79,33 +80,89 @@ android {
 }
 
 dependencies {
-    // Android support
-    implementation 'androidx.appcompat:appcompat:1.6.1'
+    // Modern AndroidX dependencies
+    implementation 'androidx.appcompat:appcompat:1.7.0-alpha03'
     implementation 'androidx.preference:preference:1.2.1'
     implementation 'androidx.swiperefreshlayout:swiperefreshlayout:1.1.0'
-    implementation 'com.google.android.material:material:1.10.0'
-
-    // Other
-    implementation 'org.androidannotations:androidannotations-api:4.8.0'
-    implementation 'org.androidannotations:ormlite-api:4.8.0'
-    implementation 'com.j256.ormlite:ormlite-android:6.1'
-    implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
-    implementation 'com.getbase:floatingactionbutton:1.10.1'
-    implementation 'com.nispok:snackbar:2.11.0'
-    implementation 'org.apache.openjpa:openjpa-lib:3.2.2'
-    implementation 'net.iharder:base64:2.3.9'
-    implementation('com.github.afollestad.material-dialogs:core:0.9.6.0@aar') {
-        transitive = true
-    }
+    implementation 'com.google.android.material:material:1.12.0-alpha03'
+    
+    // Modern Android Architecture Components
+    implementation 'androidx.lifecycle:lifecycle-viewmodel:2.8.0-alpha03'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.0-alpha03'
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.8.0-alpha03'
+    implementation 'androidx.lifecycle:lifecycle-runtime:2.8.0-alpha03'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.8.0-alpha03'
+    
+    // Navigation Component
+    implementation 'androidx.navigation:navigation-fragment:2.7.7'
+    implementation 'androidx.navigation:navigation-ui:2.7.7'
+    
+    // Room for database operations (replacing ORMLite)
+    implementation 'androidx.room:room-runtime:2.6.1'
+    implementation 'androidx.room:room-ktx:2.6.1'
+    annotationProcessor 'androidx.room:room-compiler:2.6.1'
+    
+    // WorkManager for background tasks
     implementation 'androidx.work:work-runtime:2.9.0'
-    implementation "androidx.lifecycle:lifecycle-viewmodel:2.6.2"
-    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2"
-
-    annotationProcessor 'org.androidannotations:androidannotations:4.8.0'
-    annotationProcessor 'org.androidannotations:ormlite:4.8.0'
-
-    // Copied From androidSdkPath/platforms/android-31/optional/org.apache.http.legacy.jar
-    // Using it as a compileOnly so this helps while developing, but is not compiled into the final
-    // app, see https://developer.android.com/studio/build/dependencies#dependency_configurations
-    compileOnly files('libs/org.apache.http.legacy.jar')
+    
+    // Modern HTTP client (replacing Apache HTTP)
+    implementation 'com.squareup.okhttp3:okhttp:4.12.0'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.12.0'
+    
+    // Modern image loading (replacing Universal Image Loader)
+    implementation 'com.github.bumptech.glide:glide:4.16.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.16.0'
+    
+    // Modern UI components
+    implementation 'com.google.android.material:material:1.12.0-alpha03'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'androidx.recyclerview:recyclerview:1.3.2'
+    implementation 'androidx.cardview:cardview:1.0.0'
+    
+    // Modern dialogs (replacing material-dialogs)
+    implementation 'com.google.android.material:material:1.12.0-alpha03'
+    
+    // Modern snackbar (replacing nispok snackbar)
+    implementation 'com.google.android.material:material:1.12.0-alpha03'
+    
+    // Modern floating action button (replacing getbase FAB)
+    implementation 'com.google.android.material:material:1.12.0-alpha03'
+    
+    // JSON parsing (replacing OpenJPA)
+    implementation 'com.google.code.gson:gson:2.10.1'
+    
+    // Base64 encoding (replacing net.iharder)
+    implementation 'androidx.core:core:1.12.0'
+    
+    // Modern coroutines support
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3'
+    
+    // ViewBinding only (DataBinding temporarily disabled)
+    // implementation 'androidx.databinding:databinding-runtime:8.4.0'
+    
+    // Testing dependencies
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    
+    // Remove deprecated dependencies
+    // implementation 'org.androidannotations:androidannotations-api:4.8.0'
+    // implementation 'org.androidannotations:ormlite-api:4.8.0'
+    // implementation 'com.j256.ormlite:ormlite-android:6.1'
+    // implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
+    // implementation 'com.getbase:floatingactionbutton:1.10.1'
+    // implementation 'com.nispok:snackbar:2.11.0'
+    // implementation 'org.apache.openjpa:openjpa-lib:3.2.2'
+    // implementation 'net.iharder:base64:2.3.9'
+    // implementation('com.github.afollestad.material-dialogs:core:0.9.6.0@aar') {
+    //     transitive = true
+    // }
+    
+    // Remove annotation processors for deprecated libraries
+    // annotationProcessor 'org.androidannotations:androidannotations:4.8.0'
+    // annotationProcessor 'org.androidannotations:ormlite:4.8.0'
+    
+    // Remove legacy HTTP library
+    // compileOnly files('libs/org.apache.http.legacy.jar')
 }

@@ -32,7 +32,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Bean;
@@ -117,7 +117,7 @@ public class TorrentsFragment extends Fragment implements OnLabelPickedListener 
         private SelectionManagerMode selectionManagerMode;
         private ActionMenuView actionsMenu;
         private Toolbar actionsToolbar;
-        private FloatingActionsMenu addmenuButton;
+        private FloatingActionButton addmenuButton;
 
         @Override
         public boolean onCreateActionMode(final ActionMode mode, Menu menu) {

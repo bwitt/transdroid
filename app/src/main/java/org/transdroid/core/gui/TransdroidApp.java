@@ -21,11 +21,28 @@ import android.app.Application;
 import androidx.annotation.NonNull;
 import androidx.work.Configuration;
 
-import org.androidannotations.annotations.EApplication;
 import org.transdroid.core.gui.log.Log;
 
-@EApplication
+/**
+ * Modern Application class for Transdroid.
+ * Replaces the AndroidAnnotations-based implementation with standard Android patterns.
+ */
 public class TransdroidApp extends Application implements Configuration.Provider {
+
+    private static TransdroidApp instance;
+    
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        instance = this;
+        
+        // Initialize logging
+        Log.initialize(this);
+    }
+    
+    public static TransdroidApp getInstance() {
+        return instance;
+    }
 
     @NonNull
     @Override
@@ -34,5 +51,4 @@ public class TransdroidApp extends Application implements Configuration.Provider
                 .setMinimumLoggingLevel(android.util.Log.DEBUG)
                 .build();
     }
-
 }

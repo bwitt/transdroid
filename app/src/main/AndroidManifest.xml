@@ -51,7 +51,7 @@
     </queries>
 
     <application
-        android:name="org.transdroid.core.gui.TransdroidApp_"
+        android:name="org.transdroid.core.gui.TransdroidApp"
         android:allowBackup="true"
         android:banner="@drawable/banner"
         android:hardwareAccelerated="true"

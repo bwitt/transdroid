@@ -38,8 +38,7 @@ import androidx.appcompat.widget.ActionMenuView;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.nispok.snackbar.Snackbar;
 import com.nispok.snackbar.SnackbarManager;
 import com.nispok.snackbar.enums.SnackbarType;
@@ -170,9 +169,7 @@ public class TorrentsActivity extends AppCompatActivity implements TorrentTasksE
     @ViewById(R.id.contextual_menu)
     protected ActionMenuView contextualMenu;
     @ViewById
-    protected FloatingActionsMenu addmenuButton;
-    @ViewById
-    protected FloatingActionButton addmenuFileButton;
+    protected FloatingActionButton addmenuButton;
     @ViewById
     protected DrawerLayout drawerLayout;
     @ViewById(R.id.drawer_container)
